@@ -68,6 +68,19 @@ app.connect('activate', () => {
         check('both gesture targets expose every input', ['app', 'workspace'].every(kind =>
             ['left-click', 'middle-click', 'right-click', 'scroll-up', 'scroll-down', 'horizontal-scroll'].every(input => !!gestureChoice(`gesture-${kind}-${input}`))));
         const horizontalSwitch = gestureRow('gesture-horizontal-switch-workspaces');
+        const natural = gestureRow('gesture-horizontal-natural-scroll');
+        const naturalRows = ['switching', 'movement'].map(kind => gestureRow(`gesture-horizontal-natural-${kind}`));
+        check('natural swiping has two independently selectable checkbox rows', natural instanceof Adw.SwitchRow
+            && naturalRows.every(target => walk(target).some(widget => widget instanceof Gtk.CheckButton)));
+        check('natural swipe action groups are unavailable until natural swiping is enabled', naturalRows.every(target => !target.get_sensitive()));
+        natural.set_active(true);
+        check('enabling natural swiping makes both action groups available', settings.get_boolean('gesture-horizontal-natural-scroll') && naturalRows.every(target => target.get_sensitive()));
+        naturalRows[0].activate();
+        check('the workspace-switching checkbox persists independently', !settings.get_boolean('gesture-horizontal-natural-switching') && settings.get_boolean('gesture-horizontal-natural-movement'));
+        natural.set_active(false); natural.set_active(true);
+        check('turning natural swiping off and on preserves its action selection', !walk(naturalRows[0]).find(widget => widget instanceof Gtk.CheckButton).get_active());
+        for (const key of ['gesture-horizontal-natural-scroll', 'gesture-horizontal-natural-switching', 'gesture-horizontal-natural-movement']) settings.reset(key);
+        check('Workspace Bar has a smooth highlight option under Animation', row('Smooth Workspace Highlight') instanceof Adw.SwitchRow);
         const horizontalRows = ['app','workspace'].map(kind => gestureRow(`gesture-${kind}-horizontal-scroll`));
         check('shared horizontal switching follows the fixture', horizontalSwitch instanceof Adw.SwitchRow && horizontalSwitch.get_active());
         check('shared switching fades both per-target horizontal rows', horizontalRows.every(row => !row.get_sensitive()));

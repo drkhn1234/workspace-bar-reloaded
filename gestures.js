@@ -70,6 +70,11 @@ export const horizontalGestureAction = (mode, direction) => {
     return {'move-windows': `move-${side}`, 'reorder-workspace': `reorder-${side}`, none: 'none'}[mode] ?? 'none';
 };
 
+export function horizontalSwipeDirection(direction, {touchpad, natural, switching, affectSwitching, affectMovement}) {
+    if (!touchpad || !natural || !(switching ? affectSwitching : affectMovement)) return direction;
+    return direction === 'left' ? 'right' : direction === 'right' ? 'left' : direction;
+}
+
 // Keep the initial target throughout a gesture. Vertical actions run once;
 // horizontal distance and momentum produce further steps on that same target.
 export class ScrollGestureTracker {

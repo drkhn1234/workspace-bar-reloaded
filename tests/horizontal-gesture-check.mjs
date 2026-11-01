@@ -8,7 +8,8 @@ export async function checkHorizontalGestures(bar, window) {
     if(GLib.getenv('GSETTINGS_BACKEND')!=='memory')throw new Error('Requires isolated memory settings');
     const results=[], manager=global.workspace_manager, settings=bar._ext.getSettings();
     const mutter=new Gio.Settings({schema_id:'org.gnome.mutter'}), wm=new Gio.Settings({schema_id:'org.gnome.desktop.wm.preferences'});
-    const keys=['gesture-horizontal-switch-workspaces','gesture-app-horizontal-scroll','gesture-workspace-horizontal-scroll'];
+    const keys=['gesture-horizontal-switch-workspaces','gesture-app-horizontal-scroll','gesture-workspace-horizontal-scroll',
+        'gesture-horizontal-natural-scroll','gesture-horizontal-natural-switching','gesture-horizontal-natural-movement'];
     const saved=keys.map(key=>[key,settings.get_value(key)]);
     const original={settings:bar._gestureSettings,execute:bar._executeGestureAction,workspace:window.get_workspace(),
         active:manager.get_active_workspace(),dynamic:mutter.get_value('dynamic-workspaces'),count:wm.get_value('num-workspaces')};
@@ -53,6 +54,35 @@ export async function checkHorizontalGestures(bar, window) {
         check('workspace reordering continues through rebuilds',original.workspace.index()===index+3);
         check('reordering keeps windows on their original workspace object',window.get_workspace()===original.workspace);
         bar._onScrollEvent(event(0));manager.reorder_workspace(original.workspace,index);await delay(100);
+        settings.set_boolean('gesture-horizontal-natural-scroll',true);
+        settings.set_boolean('gesture-horizontal-natural-switching',true);
+        settings.set_boolean('gesture-horizontal-switch-workspaces',true);
+        original.workspace.activate(global.get_current_time());await delay(80);
+        event=eventFor(icon());bar._onScrollEvent(event(-1));bar._onScrollEvent(event(-8));await delay(100);
+        check('natural switching reverses physical direction and preserves swipe momentum',manager.get_active_workspace_index()===original.workspace.index()+3);
+        bar._onScrollEvent(event(0));settings.set_boolean('gesture-horizontal-natural-switching',false);
+        original.workspace.activate(global.get_current_time());await delay(80);
+        event=eventFor(icon());bar._onScrollEvent(event(1));await delay(80);
+        check('switching can keep physical direction while natural movement stays selected',manager.get_active_workspace_index()===original.workspace.index()+1);
+        bar._onScrollEvent(event(0));settings.set_boolean('gesture-horizontal-switch-workspaces',false);
+        settings.set_boolean('gesture-horizontal-natural-movement',true);
+        event=eventFor(icon());bar._onScrollEvent(event(-1));bar._onScrollEvent(event(-8));await delay(120);
+        check('natural window movement reverses direction and continues on the original window',window.get_workspace().index()===original.workspace.index()+3);
+        bar._onScrollEvent(event(0));settings.set_boolean('gesture-horizontal-natural-movement',false);
+        event=eventFor(icon());bar._onScrollEvent(event(-1));await delay(100);
+        check('movement can independently retain physical swipe direction',window.get_workspace().index()===original.workspace.index()+2);
+        bar._onScrollEvent(event(0));
+        window.change_workspace(original.workspace);await delay(100);
+        settings.set_boolean('gesture-horizontal-natural-movement',true);
+        const number=bar._container.get_children().find(button=>button.wsIndex===original.workspace.index())._wsbNumWrapper;
+        event=eventFor(number);bar._onScrollEvent(event(-1));bar._onScrollEvent(event(-8));await delay(120);
+        check('natural workspace reordering reverses direction and preserves momentum',original.workspace.index()===index+3);
+        bar._onScrollEvent(event(0));manager.reorder_workspace(original.workspace,index);await delay(100);
+        original.workspace.activate(global.get_current_time());
+        settings.set_boolean('gesture-horizontal-switch-workspaces',true);settings.set_boolean('gesture-horizontal-natural-switching',true);
+        const wheel={...eventFor(icon())(1),get_scroll_direction:()=>Clutter.ScrollDirection.RIGHT,get_scroll_source:()=>Clutter.ScrollSource.WHEEL};
+        bar._onScrollEvent(wheel);await delay(80);
+        check('natural horizontal swiping leaves mouse-wheel navigation unchanged',manager.get_active_workspace_index()===original.workspace.index()+1);
         return results;
     }finally{
         bar._endScrollCapture();window.change_workspace(original.workspace);original.active.activate(global.get_current_time());

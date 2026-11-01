@@ -216,15 +216,18 @@ function _buildCSS(p, accent, showBg, mag) {
     border-color: ${accent};
 }
 
-/* Dock items are painted in uiGroup so both app icons and workspace numbers
-   can grow out of the panel. The original app frames fade underneath. */
+/* Workspace selection must update both pill segments in the same frame.
+   Magnification already fades their parent actor; CSS interpolation here
+   would leave the previous workspace's app border highlighted after a switch. */
+.wsb-ws-num-wrapper,
 .wsb-icons-wrapper,
 .wsb-pill-rim {
-    transition-duration: ${mag.duration}ms;
+    transition-duration: 0ms;
 }
 
-.wsb-drag-mode .wsb-icons-wrapper,
-.wsb-drag-mode .wsb-pill-rim {
+.wsb-active-workspace-highlight {
+    border: ${p.borderWidth}px solid ${accent};
+    border-radius: ${p.roundness}px;
     transition-duration: 0ms;
 }
 

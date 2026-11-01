@@ -3,7 +3,28 @@ import test from 'node:test';
 import {readFileSync} from 'node:fs';
 import {DEFAULT_CONFIGURATION} from '../defaultConfiguration.js';
 import {GESTURE_INPUTS, gestureActions, gestureDefault, horizontalActions, migrateGestureSettings,
-    ScrollGestureTracker, horizontalGestureAction, runWindowGesture} from '../gestures.js';
+    ScrollGestureTracker, horizontalGestureAction, horizontalSwipeDirection, runWindowGesture} from '../gestures.js';
+
+test('natural horizontal swiping independently reverses switching and movement, with mouse and vertical input unchanged', () => {
+    for (const switching of [false, true]) for (const affectSwitching of [false, true]) for (const affectMovement of [false, true]) {
+        const options = {touchpad: true, natural: true, switching, affectSwitching, affectMovement};
+        const reverse = switching ? affectSwitching : affectMovement;
+        assert.equal(horizontalSwipeDirection('left', options), reverse ? 'right' : 'left');
+        assert.equal(horizontalSwipeDirection('right', options), reverse ? 'left' : 'right');
+        assert.equal(horizontalSwipeDirection('left', {...options, touchpad: false}), 'left');
+        assert.equal(horizontalSwipeDirection('left', {...options, natural: false}), 'left');
+        assert.equal(horizontalSwipeDirection('up', options), 'up');
+    }
+});
+
+test('natural horizontal direction is independent of the operating system natural-scroll setting', () => {
+    for (const inverted of [false, true]) {
+        const tracker = new ScrollGestureTracker();
+        const physical = tracker.feed({dx: inverted ? -2 : 2, dy: 0, time: 0, touchpad: true, inverted});
+        assert.equal(horizontalSwipeDirection(physical.direction, {touchpad: true, natural: true,
+            switching: true, affectSwitching: true, affectMovement: false}), 'left');
+    }
+});
 
 function fixture() {
     let active = 1;

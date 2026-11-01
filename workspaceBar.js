@@ -12,7 +12,8 @@ import DockMagnifier from "./dockMagnifier.js";
 import GLib from "gi://GLib";
 import Gio from "gi://Gio";
 import Pango from "gi://Pango";
-import {migrateGestureSettings, ScrollGestureTracker, horizontalGestureAction, runWindowGesture} from './gestures.js';
+import {migrateGestureSettings, ScrollGestureTracker, horizontalGestureAction, horizontalSwipeDirection, runWindowGesture} from './gestures.js';
+import WorkspaceHighlight from './workspaceHighlight.js';
 
 const ICON_TIMEOUT = 200;
 const GAP_HALF_WIDTH = 15;
@@ -94,7 +95,7 @@ export default class WorkspaceBar {
         this._magnifier = null;
         this._gestureSettings = this._ext.getSettings();
         // A running shell may still hold the schema from before an update.
-        if (!this._gestureSettings.settings_schema.has_key('gesture-horizontal-switch-workspaces')
+        if (!this._gestureSettings.settings_schema.has_key('gesture-horizontal-natural-scroll')
             || this._gestureSettings.get_default_value('gesture-app-middle-click').deep_unpack() !== 'new-instance') {
             const source = Gio.SettingsSchemaSource.new_from_directory(`${this._ext.path}/schemas`, Gio.SettingsSchemaSource.get_default(), false);
             this._gestureSettings = new Gio.Settings({settings_schema: source.lookup('org.gnome.shell.extensions.workspace-bar', false)});
@@ -106,6 +107,8 @@ export default class WorkspaceBar {
         this._initialPopulation();
         this._connectSignals();
         this._magnifier = new DockMagnifier(this);
+        this._highlight = new WorkspaceHighlight(this);
+        this._updateActiveWorkspace();
 
         this._scheduleTimeout(VIEWPORT_INIT_DELAY_MS, () => this._updateAvailableWidth());
     }
@@ -119,6 +122,8 @@ export default class WorkspaceBar {
         }
         this._magnifier?.destroy();
         this._magnifier = null;
+        this._highlight?.destroy();
+        this._highlight = null;
         this._panelLayoutInjections?.clear();
         this._panelLayoutInjections = null;
         this._unregisterGapDragMonitor();
@@ -307,12 +312,18 @@ export default class WorkspaceBar {
             target: continuing ? this._scrollGesture.target : this._gestureTargetAt(event)});
         if (!gesture) return Clutter.EVENT_STOP;
         const {target} = gesture, horizontal = ['left', 'right'].includes(gesture.direction);
+        let actionDirection = gesture.direction;
         let action;
         if (horizontal) {
-            action = this._gestureSettings.get_boolean('gesture-horizontal-switch-workspaces')
-                ? `switch-${gesture.direction === 'left' ? 'previous' : 'next'}`
+            const switching = this._gestureSettings.get_boolean('gesture-horizontal-switch-workspaces');
+            actionDirection = horizontalSwipeDirection(actionDirection, {touchpad,
+                natural: this._gestureSettings.get_boolean('gesture-horizontal-natural-scroll'), switching,
+                affectSwitching: this._gestureSettings.get_boolean('gesture-horizontal-natural-switching'),
+                affectMovement: this._gestureSettings.get_boolean('gesture-horizontal-natural-movement')});
+            action = switching
+                ? `switch-${actionDirection === 'left' ? 'previous' : 'next'}`
                 : target.kind === 'bar' ? 'none' : horizontalGestureAction(
-                    this._gestureSettings.get_string(`gesture-${target.kind}-horizontal-scroll`), gesture.direction);
+                    this._gestureSettings.get_string(`gesture-${target.kind}-horizontal-scroll`), actionDirection);
         } else if (target.kind === 'bar') action = gesture.direction === 'up' ? 'switch-previous' : 'switch-next';
         else action = this._gestureSettings.get_string(`gesture-${target.kind}-scroll-${gesture.direction}`);
         const manager = global.workspace_manager;
@@ -320,7 +331,7 @@ export default class WorkspaceBar {
             ? this._scrollGesture.workspaceCount ??= manager.get_n_workspaces() : manager.get_n_workspaces();
         for (let step = 0; step < Math.min(gesture.steps ?? 1, workspaceCount); step++) {
             const index = action.startsWith('switch-') ? manager.get_active_workspace_index() : target.workspace?.index();
-            const destinationIndex = index + (gesture.direction === 'left' ? -1 : 1);
+            const destinationIndex = index + (actionDirection === 'left' ? -1 : 1);
             // A move into GNOME's empty spare can create another spare. Keep a
             // single swipe within the workspace list that existed at its start.
             if (horizontal && (action.startsWith('switch-') || action.startsWith('move-') || action.startsWith('reorder-'))
@@ -845,6 +856,7 @@ export default class WorkspaceBar {
         this._arrowLeft.visible = hasOverflow && this._scrollOffset > OVERFLOW_TOLERANCE;
         this._arrowRight.visible = hasOverflow && (this._scrollOffset + clipW < contentW - OVERFLOW_TOLERANCE);
         this._magnifier?.refresh();
+        this._highlight?.refresh();
     }
 
     // ===================== INITIAL POPULATION =====================
@@ -1114,7 +1126,7 @@ export default class WorkspaceBar {
         for (let btn of this._container.get_children()) {
             let numWrapper = btn._wsbNumWrapper;
             let iconsWrapper = btn._wsbIconsWrapper;
-            if (btn.wsIndex === activeWs) {
+            if (btn.wsIndex === activeWs && !this._highlight?.enabled) {
                 numWrapper.add_style_class_name("wsb-ws-num-wrapper-active");
                 iconsWrapper.add_style_class_name("wsb-icons-wrapper-active");
             } else {
@@ -1123,6 +1135,7 @@ export default class WorkspaceBar {
             }
         }
 
+        this._highlight?.activeChanged();
         this._scheduleSync();
         this._scheduleScrollToActive();
     }

@@ -480,6 +480,8 @@ export default class WorkspaceBarPrefs extends ExtensionPreferences {
         addSwitchRow(animationGroup, settings, "enable-animations",
             "Enable Animations",
             "Smoothly animate opening, closing, moving, creating and reordering. Turn off for instant updates.");
+        addSwitchRow(animationGroup, settings, 'smooth-workspace-highlight',
+            'Smooth Workspace Highlight', 'Slide the active workspace outline with GNOME’s workspace animation. Disabled animations make it update immediately.');
 
         let focusRow = addSwitchRow(animationGroup, settings, "focus-scale-effect",
             "Focus Scale Effect", "Slightly shrink unfocused app icons with a smooth transition");
@@ -505,6 +507,19 @@ export default class WorkspaceBarPrefs extends ExtensionPreferences {
             'Horizontal Scroll/Swipe switches workspaces',
             'Switch workspaces wherever you scroll horizontally over the bar. Longer swipes and momentum continue through more workspaces.');
         switchWorkspaces.set_name('gesture-horizontal-switch-workspaces');
+        const natural = addSwitchRow(horizontalGroup, settings, 'gesture-horizontal-natural-scroll',
+            'Natural Horizontal Swiping', 'Reverse horizontal touchpad swipe directions for the selected actions. Mouse wheels and vertical gestures keep their usual direction.');
+        natural.set_name('gesture-horizontal-natural-scroll');
+        for (const [key, title, subtitle] of [
+            ['gesture-horizontal-natural-switching', 'Switching Workspaces', 'Apply natural swiping when switching the active workspace.'],
+            ['gesture-horizontal-natural-movement', 'Moving Windows and Workspaces', 'Apply natural swiping when moving app windows or reordering workspaces.'],
+        ]) {
+            const row = new Adw.ActionRow({name: key, title, subtitle});
+            const checkbox = new Gtk.CheckButton({valign: Gtk.Align.CENTER});
+            settings.bind(key, checkbox, 'active', Gio.SettingsBindFlags.DEFAULT);
+            row.add_suffix(checkbox); row.set_activatable_widget(checkbox); horizontalGroup.add(row);
+            settings.bind('gesture-horizontal-natural-scroll', row, 'sensitive', Gio.SettingsBindFlags.GET);
+        }
         gesturesPage.add(horizontalGroup);
         for (const [kind, title, description] of [
             ['app', 'App Icons', 'Actions apply in both normal and magnified views. A combined icon affects all its windows; a row in its window list affects only that window.'],

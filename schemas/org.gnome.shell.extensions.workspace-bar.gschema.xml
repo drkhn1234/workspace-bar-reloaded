@@ -36,6 +36,11 @@
       <summary>Focus scale effect</summary>
       <description>When enabled, the icon of the focused window is shown at full size while unfocused icons are slightly shrunk, with a smooth transition when focus changes.</description>
     </key>
+    <key type="b" name="smooth-workspace-highlight">
+      <default>false</default>
+      <summary>Smooth Workspace Highlight</summary>
+      <description>Slide the active workspace outline with GNOME's workspace animation. Disabled animations make it update immediately.</description>
+    </key>
     <key type="i" name="magnification-spacing">
       <default>16</default>
       <range min="0" max="64"/>
@@ -64,6 +69,18 @@
     </key>
     <key type="i" name="gesture-settings-version">
       <default>0</default><summary>Gesture settings migration version</summary>
+    </key>
+    <key type="b" name="gesture-horizontal-natural-scroll">
+      <default>false</default><summary>Natural Horizontal Swiping</summary>
+      <description>Reverse physical horizontal touchpad swipe directions for the selected action groups. Mouse wheels and vertical gestures are unchanged.</description>
+    </key>
+    <key type="b" name="gesture-horizontal-natural-switching">
+      <default>true</default><summary>Switching Workspaces</summary>
+      <description>Apply natural horizontal swiping to workspace switching.</description>
+    </key>
+    <key type="b" name="gesture-horizontal-natural-movement">
+      <default>true</default><summary>Moving Windows and Workspaces</summary>
+      <description>Apply natural horizontal swiping to moving app windows between workspaces and reordering workspaces.</description>
     </key>
     <key type="b" name="gesture-settings-migrated">
       <default>false</default><summary>Gesture settings migrated</summary>
