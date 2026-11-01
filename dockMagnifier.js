@@ -2,6 +2,7 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import St from 'gi://St';
+import Shell from 'gi://Shell';
 import Cairo from 'cairo';
 import PangoCairo from 'gi://PangoCairo';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -197,6 +198,9 @@ export default class DockMagnifier {
 
     _setActive(active, immediate = false) {
         if (active && !this._sources().length) active = false;
+        // DND picks non-reactive, transparent actors too. Keep its source
+        // mapped, but let drop targeting pass through the collapsed overlay.
+        Shell.util_set_hidden_from_pick(this._overlay, !active || this._dragging);
         if (active !== this._active) {
             this._active = active;
             if (active) {
