@@ -22,6 +22,7 @@ export async function checkHorizontalGestures(bar, window) {
             get_scroll_source:()=>Clutter.ScrollSource.FINGER,get_scroll_flags:()=>0});
     };
     try{
+        settings.set_boolean('gesture-horizontal-natural-scroll',false);
         mutter.set_boolean('dynamic-workspaces',false);wm.set_int('num-workspaces',5);await delay(300);
         bar._gestureSettings=settings;bar._executeGestureAction=Object.getPrototypeOf(bar)._executeGestureAction;
         original.workspace.activate(global.get_current_time());await delay(100);

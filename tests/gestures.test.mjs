@@ -68,7 +68,7 @@ test('fresh settings retain the selected defaults through migration', () => {
     const settings = gestureSettings();
     migrateGestureSettings(settings);
     assert.equal(settings.get_string('gesture-app-middle-click'), 'new-instance');
-    assert.equal(settings.get_boolean('gesture-horizontal-switch-workspaces'), false);
+    assert.equal(settings.get_boolean('gesture-horizontal-switch-workspaces'), true);
     for (const kind of ['app', 'workspace']) for (const [input] of GESTURE_INPUTS)
         assert.equal(settings.get_string(`gesture-${kind}-${input}`), gestureDefault(kind, input));
     assert.ok(gestureActions('app').some(([action]) => action === 'new-instance'));

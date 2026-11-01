@@ -29,6 +29,8 @@ app.connect('activate', () => {
         settings.set_boolean('show-advanced-magnification', false);
         settings.set_strv('magnification-visible-tools', ['peak']);
         settings.set_boolean('gesture-horizontal-switch-workspaces', true);
+        settings.set_boolean('gesture-horizontal-natural-scroll', false);
+        settings.set_boolean('gesture-horizontal-natural-movement', true);
         settings.set_int('magnification-frame-opacity', 80);
         Preferences.prototype.fillPreferencesWindow.call({getSettings: () => settings}, window);
         check('Workspace Bar is the default view', window.get_visible_page().get_title() === 'Workspace Bar');
