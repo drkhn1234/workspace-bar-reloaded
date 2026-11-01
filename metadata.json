@@ -1,0 +1,18 @@
+{
+  "description": "Workspace buttons, app icons and dock-style hover magnification in the GNOME top panel.\n\nMove windows and reorder workspaces with drag-and-drop. Configure clicks, scrolling and touchpad swipes separately for app icons and workspace numbers. Tune magnification curves, spacing, focused-app highlights and appearance in native preferences.\n\nMaintained by drkhn1234. Based on Workspace Bar by jguece.",
+  "name": "Workspace Bar: Reloaded",
+  "settings-schema": "org.gnome.shell.extensions.workspace-bar",
+  "shell-version": [
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
+    "51"
+  ],
+  "url": "https://github.com/drkhn1234/workspace-bar-reloaded",
+  "uuid": "workspace-bar-reloaded@drkhn1234.github.io",
+  "version-name": "12",
+  "author": "drkhn1234"
+}

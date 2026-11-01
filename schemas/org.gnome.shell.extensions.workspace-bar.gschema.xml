@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/org/gnome/shell/extensions/workspace-bar/" id="org.gnome.shell.extensions.workspace-bar">
+    <key type="s" name="size-mode">
+      <default>'large'</default>
+      <summary>Size preset</summary>
+      <description>Controls icon size, font size, spacing, and roundness. Options: small, medium, large.</description>
+    </key>
+    <key type="s" name="position">
+      <default>'center'</default>
+      <summary>Panel position</summary>
+      <description>Where to place the workspace bar in the top panel. Options: left, center, right.</description>
+    </key>
+    <key type="i" name="position-index">
+      <default>0</default>
+      <summary>Position index within the panel box</summary>
+      <description>Index position within the chosen panel box (left, center, or right). 0 = first position. Higher values move it further along.</description>
+    </key>
+    <key type="b" name="show-icons-background">
+      <default>true</default>
+      <summary>Show icons background</summary>
+      <description>When enabled, a subtle fill is drawn behind the workspace icons. Disable for a flatter look.</description>
+    </key>
+    <key type="b" name="legibility-shadows">
+      <default>true</default>
+      <summary>Legibility shadows</summary>
+      <description>When enabled, the workspace numbers and window icons cast a soft shadow, and a thin shaded rim is drawn just outside each pill border, keeping the bar readable over transparent panels. On by default.</description>
+    </key>
+    <key type="b" name="enable-animations">
+      <default>true</default>
+      <summary>Enable animations</summary>
+      <description>When enabled, workspace and icon changes (opening, closing, moving, creating, reordering) animate smoothly. On by default.</description>
+    </key>
+    <key type="b" name="focus-scale-effect">
+      <default>true</default>
+      <summary>Focus scale effect</summary>
+      <description>When enabled, the icon of the focused window is shown at full size while unfocused icons are slightly shrunk, with a smooth transition when focus changes.</description>
+    </key>
+    <key type="i" name="magnification-spacing">
+      <default>16</default>
+      <range min="0" max="64"/>
+      <summary>Workspace Group Gap</summary>
+      <description>Gap in pixels between workspace groups near the cursor, with a minimum supplied by the size preset. It blends back to normal preset spacing outside the magnification region. Number-to-own-icons spacing is automatic and uses the visible digit or active circle. App-to-app gaps retain their normal preset spacing.</description>
+    </key>
+    <key type="b" name="show-active-workspace-ring">
+      <default>true</default>
+      <summary>Active workspace circle</summary>
+      <description>Draw an accent-colored circle around the active workspace number only while the bar is magnified.</description>
+    </key>
+    <key type="i" name="focus-scale-reduction">
+      <default>15</default>
+      <range min="5" max="95"/>
+      <summary>Focus scale reduction</summary>
+      <description>Percentage by which unfocused icons are shrunk (5 = barely noticeable, 95 = nearly invisible).</description>
+    </key>
+    <key type="b" name="combine-icons">
+      <default>false</default>
+      <summary>Combine app icons</summary>
+      <description>When enabled, multiple windows of the same application on the same workspace are shown as a single icon with a window-count badge. Clicking the combined icon opens a list of that application's windows to pick from; dragging it moves all of its windows at once, while dragging a window out of the list moves just that one. Off by default.</description>
+    </key>
+    <key type="b" name="gesture-horizontal-switch-workspaces">
+      <default>false</default><summary>Horizontal Scroll/Swipe switches workspaces</summary>
+      <description>Horizontal scrolling and two-finger swipes switch workspaces across the bar, overriding the per-target horizontal actions.</description>
+    </key>
+    <key type="i" name="gesture-settings-version">
+      <default>0</default><summary>Gesture settings migration version</summary>
+    </key>
+    <key type="b" name="gesture-settings-migrated">
+      <default>false</default><summary>Gesture settings migrated</summary>
+    </key>
+    <!-- App overview values are migration-only: not exposed or executed.
+         Retain their range so old non-destructive swipes migrate to none. -->
+    <key type="s" name="gesture-app-left-click">
+      <default>'activate'</default><choices><choice value="activate"/><choice value="new-instance"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="none"/></choices>
+      <summary>Left Click on app targets</summary>
+      <description>Action for left click over an app icon. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-app-middle-click">
+      <default>'new-instance'</default><choices><choice value="activate"/><choice value="new-instance"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="none"/></choices>
+      <summary>Middle Click on app targets</summary>
+      <description>Action for middle click over an app icon. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-app-right-click">
+      <default>'menu'</default><choices><choice value="activate"/><choice value="new-instance"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="none"/></choices>
+      <summary>Right Click on app targets</summary>
+      <description>Action for right click over an app icon. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-app-scroll-up">
+      <default>'move-active'</default><choices><choice value="activate"/><choice value="new-instance"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="switch-previous"/><choice value="switch-next"/><choice value="move-previous"/><choice value="move-next"/><choice value="none"/></choices>
+      <summary>Scroll / Swipe Up on app targets</summary>
+      <description>Action for scroll / swipe up over an app icon. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-app-scroll-down">
+      <default>'close'</default><choices><choice value="activate"/><choice value="new-instance"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="switch-previous"/><choice value="switch-next"/><choice value="move-previous"/><choice value="move-next"/><choice value="none"/></choices>
+      <summary>Scroll / Swipe Down on app targets</summary>
+      <description>Action for scroll / swipe down over an app icon. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-app-horizontal-scroll">
+      <default>'move-windows'</default><choices><choice value="move-windows"/><choice value="none"/></choices>
+      <summary>Horizontal Scroll / Swipe on app targets</summary>
+      <description>Action for horizontal scroll / swipe over an app icon. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-workspace-left-click">
+      <default>'activate'</default><choices><choice value="activate"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="none"/></choices>
+      <summary>Left Click on workspace targets</summary>
+      <description>Action for left click over a workspace number or background. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-workspace-middle-click">
+      <default>'overview'</default><choices><choice value="activate"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="none"/></choices>
+      <summary>Middle Click on workspace targets</summary>
+      <description>Action for middle click over a workspace number or background. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-workspace-right-click">
+      <default>'menu'</default><choices><choice value="activate"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="none"/></choices>
+      <summary>Right Click on workspace targets</summary>
+      <description>Action for right click over a workspace number or background. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-workspace-scroll-up">
+      <default>'move-active'</default><choices><choice value="activate"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="switch-previous"/><choice value="switch-next"/><choice value="move-previous"/><choice value="move-next"/><choice value="reorder-previous"/><choice value="reorder-next"/><choice value="none"/></choices>
+      <summary>Scroll / Swipe Up on workspace targets</summary>
+      <description>Action for scroll / swipe up over a workspace number or background. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-workspace-scroll-down">
+      <default>'close'</default><choices><choice value="activate"/><choice value="menu"/><choice value="overview"/><choice value="move-active"/><choice value="close"/><choice value="switch-previous"/><choice value="switch-next"/><choice value="move-previous"/><choice value="move-next"/><choice value="reorder-previous"/><choice value="reorder-next"/><choice value="none"/></choices>
+      <summary>Scroll / Swipe Down on workspace targets</summary>
+      <description>Action for scroll / swipe down over a workspace number or background. Applies in normal and magnified views.</description>
+    </key>
+    <key type="s" name="gesture-workspace-horizontal-scroll">
+      <default>'move-windows'</default><choices><choice value="move-windows"/><choice value="reorder-workspace"/><choice value="none"/></choices>
+      <summary>Horizontal Scroll / Swipe on workspace targets</summary>
+      <description>Action for horizontal scroll / swipe over a workspace number or background. Applies in normal and magnified views.</description>
+    </key>
+    <!-- Legacy value retained only for migration to the configurable middle-click action. -->
+    <key type="b" name="middle-click-close">
+      <default>false</default>
+      <summary>Middle-click closes window</summary>
+      <description>When enabled, middle-clicking an app icon closes that window; a combined icon closes all of its windows at once, and a row in its expanded window list closes just that one. Middle-clicking anywhere else on a workspace button still toggles the Overview. Off by default, so the previous middle-click behaviour is preserved on upgrade.</description>
+    </key>
+    <key type="b" name="dim-inactive-icons">
+      <default>true</default>
+      <summary>Dim inactive icons</summary>
+      <description>When enabled, the icon of every window except the focused one is drawn at reduced opacity.</description>
+    </key>
+    <key type="b" name="desaturate-inactive-icons">
+      <default>false</default>
+      <summary>Desaturate inactive icons</summary>
+      <description>When enabled, the icon of every window except the focused one is drawn in grayscale.</description>
+    </key>
+    <key type="b" name="hide-empty-last-workspace">
+      <default>true</default>
+      <summary>Hide empty last workspace</summary>
+      <description>With dynamic workspaces, GNOME always keeps one empty workspace at the end of the list. When enabled, that workspace is not shown in the bar; it is only hidden, never removed. It shows again while it is the active workspace and as soon as a window is placed on it. Has no effect with a fixed number of workspaces. On by default.</description>
+    </key>
+    <key type="b" name="enable-magnification">
+      <default>true</default>
+      <summary>Hover magnification</summary>
+      <description>Magnify workspace numbers and app icons when hovering over the workspace bar.</description>
+    </key>
+    <key type="b" name="show-advanced-magnification">
+      <default>true</default>
+      <summary>Show advanced magnification settings</summary>
+      <description>Show detailed magnification controls. Hiding them keeps their configured values.</description>
+    </key>
+    <key type="i" name="magnification-settings-version">
+      <default>0</default><summary>Magnification settings migration version</summary>
+    </key>
+    <key type="s" name="magnification-peak-mode">
+      <default>'relative'</default><choices><choice value="relative"/><choice value="pixels"/></choices>
+      <summary>Peak Size Units</summary><description>Choose a size relative to the normal icon or an absolute pixel size.</description>
+    </key>
+    <key type="i" name="magnification-peak-pixels">
+      <default>50</default><range min="1" max="512"/>
+      <summary>Peak Pixel Size</summary><description>Absolute peak size; icons never shrink below their normal size.</description>
+    </key>
+    <key type="i" name="magnification-scale">
+      <default>250</default>
+      <range min="100" max="500"/>
+      <summary>Peak Size</summary>
+      <description>Largest app icon size, as a percentage of normal size or in pixels. 100% keeps the normal size.</description>
+    </key>
+    <key type="i" name="magnification-minimum-peak-size">
+      <default>48</default>
+      <range min="0" max="256"/>
+      <summary>Minimum Peak Icon Size</summary>
+      <description>Minimum size of a fully magnified app icon, in pixels. This keeps small size presets readable; 0 disables the minimum.</description>
+    </key>
+    <key type="i" name="magnification-reach">
+      <default>300</default>
+      <range min="50" max="1200"/>
+      <summary>Magnification Reach</summary>
+      <description>Maximum distance affected on each side of the cursor, as a percentage of a normal icon width. Adaptive width can shrink this for fewer shown apps.</description>
+    </key>
+    <key type="i" name="magnification-sharpness">
+      <default>100</default>
+      <range min="25" max="400"/>
+      <summary>Curve Shape</summary>
+      <description>100% gives a Gaussian bell. Higher values make the centre more pointed with longer tails; lower values flatten the centre and steepen the shoulders.</description>
+    </key>
+    <key type="b" name="magnification-app-only">
+      <default>true</default>
+      <summary>Ignore Workspace Numbers in the Curve</summary>
+      <description>Treat numbers and workspace separators as one normal app gap when calculating app sizes. Turn off to use their full on-screen distance.</description>
+    </key>
+    <key type="s" name="magnification-number-mode">
+      <default>'follow-app'</default>
+      <choices><choice value="follow-app"/><choice value="own-workspace"/><choice value="none"/></choices>
+      <summary>When Numbers Grow</summary>
+      <description>Follow Icon matches the nearest app. Own Workspace grows numbers only over their own workspace. Normal Size removes growth. Numbers stay vertically aligned with their nearest app in every mode.</description>
+    </key>
+    <key type="i" name="magnification-number-scale">
+      <default>100</default>
+      <range min="0" max="200"/>
+      <summary>Number Growth</summary>
+      <description>Percentage of the extra growth applied to numbers. 100% follows the usual growth; 0% removes growth without changing app icons.</description>
+    </key>
+    <key type="b" name="magnification-empty-numbers">
+      <default>true</default>
+      <summary>Magnify Empty Workspace Numbers</summary>
+      <description>Let a number grow even when its workspace has no app icons to follow.</description>
+    </key>
+    <key type="b" name="magnification-empty-hover-only">
+      <default>false</default>
+      <summary>Empty Numbers Grow Only on Hover</summary>
+      <description>Keep neighbouring empty numbers at normal size. Turn off to let the curve affect them from nearby.</description>
+    </key>
+    <key type="b" name="magnification-preset-app-gap">
+      <default>true</default>
+      <summary>Use Preset App Icon Spacing</summary>
+      <description>Keep app-to-app gaps from the normal size preset. Turn off to use the custom gap below.</description>
+    </key>
+    <key type="i" name="magnification-app-gap">
+      <default>6</default>
+      <range min="0" max="64"/>
+      <summary>App Icon Gap</summary>
+      <description>Automatic keeps normal app gaps. Custom sets the gap in pixels; Marker Spacing controls its distribution inside the cutoff. Moving markers changes where apps sample the curve. The curve itself stays fixed.</description>
+    </key>
+    <key type="b" name="magnification-preset-number-gap">
+      <default>true</default>
+      <summary>Use Preset Number-to-Icon Spacing</summary>
+      <description>Keep the automatic gap from a visible digit or circle to its own icons. Turn off to set a custom gap.</description>
+    </key>
+    <key type="i" name="magnification-number-gap">
+      <default>27</default>
+      <range min="0" max="64"/>
+      <summary>Number-to-Icon Gap</summary>
+      <description>Gap from the visible digit or circle to its own app group near the cursor, in pixels. Does not change workspace-to-workspace spacing.</description>
+    </key>
+    <key type="b" name="magnification-preset-group-minimum">
+      <default>true</default>
+      <summary>Use Preset Minimum Workspace Gap</summary>
+      <description>Keep a small size-preset gutter between neighbouring workspace groups, even when Workspace Group Gap is zero.</description>
+    </key>
+    <key type="i" name="magnification-group-minimum">
+      <default>0</default>
+      <range min="0" max="64"/>
+      <summary>Minimum Workspace Gap</summary>
+      <description>Smallest allowed gap between workspace groups near the cursor, in pixels. Zero allows groups to touch.</description>
+    </key>
+    <key type="b" name="magnification-trim-number-padding">
+      <default>true</default>
+      <summary>Trim Transparent Number Padding</summary>
+      <description>Pack numbers using the visible digit or circle. Turn off to reserve the full original number cell, leaving more space around numbers.</description>
+    </key>
+    <key type="i" name="magnification-number-padding">
+      <default>2</default>
+      <range min="0" max="24"/>
+      <summary>Extra Number Padding</summary>
+      <description>Extra margin reserved around a magnified digit or circle, in normal-size pixels. This margin grows with the number.</description>
+    </key>
+    <key type="s" name="magnification-vertical-alignment">
+      <default>'panel-edge'</default>
+      <choices><choice value="panel-edge"/><choice value="center-line"/></choices>
+      <summary>Vertical Alignment</summary>
+      <description>Dock Curve keeps icons anchored to the panel edge. Centre Line puts the centres of all magnified items on one horizontal line.</description>
+    </key>
+    <key type="i" name="magnification-lift">
+      <default>0</default>
+      <range min="0" max="128"/>
+      <summary>Lift from Panel</summary>
+      <description>Move the magnified row farther into the desktop, in pixels. Works upward from a bottom panel and downward from a top panel.</description>
+    </key>
+    <key type="i" name="magnification-number-offset">
+      <default>0</default>
+      <range min="-64" max="64"/>
+      <summary>Number Vertical Offset</summary>
+      <description>Move only workspace numbers relative to their icons. Positive values move into the desktop; negative values move back toward the panel.</description>
+    </key>
+    <key type="i" name="magnification-circle-padding">
+      <default>4</default>
+      <range min="0" max="20"/>
+      <summary>Circle Inset</summary>
+      <description>Inset from the number cell on each side, in pixels. A larger value makes the active circle smaller.</description>
+    </key>
+    <key type="i" name="magnification-circle-width">
+      <default>2</default>
+      <range min="1" max="8"/>
+      <summary>Circle Border Width</summary>
+      <description>Thickness of the accent-coloured circle, in pixels before magnification.</description>
+    </key>
+    <key type="i" name="magnification-circle-opacity">
+      <default>100</default>
+      <range min="0" max="100"/>
+      <summary>Circle Opacity</summary>
+      <description>Visibility of the active circle, from 0% transparent to 100% opaque.</description>
+    </key>
+    <key type="i" name="magnification-optical-strength">
+      <default>100</default>
+      <range min="0" max="200"/>
+      <summary>Optical Centring Strength</summary>
+      <description>Compensate for uneven visual weight in digits such as 4. 100% is the normal correction; 0% uses the digit bounding box.</description>
+    </key>
+    <key type="i" name="magnification-circle-offset-x">
+      <default>0</default>
+      <range min="-24" max="24"/>
+      <summary>Circle Horizontal Offset</summary>
+      <description>Move the circle relative to its digit, in pixels before magnification. Positive values move right; negative values move left.</description>
+    </key>
+    <key type="i" name="magnification-circle-offset-y">
+      <default>0</default>
+      <range min="-24" max="24"/>
+      <summary>Circle Vertical Offset</summary>
+      <description>Move the circle relative to its digit, in pixels before magnification. Positive values move down; negative values move up.</description>
+    </key>
+    <key type="i" name="magnification-duration">
+      <default>180</default>
+      <range min="0" max="1000"/>
+      <summary>Transition Duration</summary>
+      <description>Time in milliseconds for hover entry, exit, empty-number growth and circle spacing changes. Zero makes transitions immediate.</description>
+    </key>
+    <key type="s" name="magnification-easing">
+      <default>'ease-out'</default>
+      <choices><choice value="ease-out"/><choice value="ease-in-out"/><choice value="linear"/></choices>
+      <summary>Transition Easing</summary>
+      <description>Ease Out starts quickly and settles gently. Ease In and Out softens both ends. Linear changes at a constant speed.</description>
+    </key>
+    <key type="i" name="magnification-frame-opacity">
+      <default>0</default>
+      <range min="0" max="100"/>
+      <summary>Workspace Frame Opacity</summary>
+      <description>How much of the normal workspace frames remains visible while fully magnified. 0% hides the frames; 100% keeps them visible.</description>
+    </key>
+    <key type="i" name="magnification-icon-opacity">
+      <default>100</default>
+      <range min="0" max="100"/>
+      <summary>App Icon Opacity</summary>
+      <description>Visibility of magnified app icons, from 0% transparent to 100% opaque.</description>
+    </key>
+    <key type="i" name="magnification-number-opacity">
+      <default>100</default>
+      <range min="0" max="100"/>
+      <summary>Workspace Number Opacity</summary>
+      <description>Visibility of magnified numbers and their circles, from 0% transparent to 100% opaque.</description>
+    </key>
+    <key type="b" name="magnification-focus-highlight-enabled">
+      <default>true</default>
+      <summary>Enable Highlight</summary>
+      <description>Mark the focused window with a coloured glow beneath its magnified app icon.</description>
+    </key>
+    <key type="i" name="magnification-focus-highlight-opacity">
+      <default>80</default><range min="0" max="100"/>
+      <summary>Highlight Opacity</summary>
+      <description>Visibility of the focused app highlight. 0% hides it; 100% makes the centre fully opaque.</description>
+    </key>
+    <key type="i" name="magnification-focus-highlight-softness">
+      <default>100</default><range min="0" max="100"/>
+      <summary>Highlight Softness</summary>
+      <description>100% uses the original soft fade. Lower values sharpen the edge; 0% draws a solid ellipse.</description>
+    </key>
+    <key type="i" name="magnification-focus-highlight-width">
+      <default>100</default><range min="25" max="300"/>
+      <summary>Highlight Width</summary>
+      <description>Stretch or narrow the glow horizontally. 100% keeps its original width; it scales with the app icon.</description>
+    </key>
+    <key type="i" name="magnification-focus-highlight-height">
+      <default>100</default><range min="25" max="300"/>
+      <summary>Highlight Height</summary>
+      <description>Stretch or flatten the glow vertically. 100% keeps its original height; it scales with the app icon.</description>
+    </key>
+    <key type="i" name="magnification-focus-highlight-offset">
+      <default>0</default><range min="-32" max="64"/>
+      <summary>Highlight Vertical Offset</summary>
+      <description>Extra distance from the icon’s lowest visible pixel, in logical pixels. Positive moves down; negative moves up. The screen edge limits downward movement.</description>
+    </key>
+    <key type="s" name="magnification-focus-highlight-color-mode">
+      <default>'icon'</default><choices><choice value="icon"/><choice value="accent"/><choice value="custom"/></choices>
+      <summary>Highlight Colour</summary>
+      <description>Use the app icon’s tint, the GNOME accent colour, or your own colour.</description>
+    </key>
+    <key type="s" name="magnification-focus-highlight-color">
+      <default>'#3584e4'</default>
+      <summary>Custom Highlight Colour</summary>
+      <description>Choose the colour used when Highlight Colour is set to Custom.</description>
+    </key>
+    <key type="i" name="magnification-icon-shadow-opacity">
+      <default>100</default>
+      <range min="0" max="100"/>
+      <summary>Icon Shadow Opacity</summary>
+      <description>Darkness of the shadow behind magnified app icons. Set to 0% to remove the shadow.</description>
+    </key>
+    <key type="i" name="magnification-icon-shadow-blur">
+      <default>12</default>
+      <range min="0" max="32"/>
+      <summary>Icon Shadow Blur</summary>
+      <description>Softness of the app icon shadow, in pixels. Zero produces a sharp shadow.</description>
+    </key>
+    <key type="i" name="magnification-icon-shadow-offset">
+      <default>3</default>
+      <range min="0" max="16"/>
+      <summary>Icon Shadow Offset</summary>
+      <description>Vertical distance of the app icon shadow below the icon, in pixels.</description>
+    </key>
+    <key type="i" name="magnification-number-shadow-opacity">
+      <default>50</default>
+      <range min="0" max="100"/>
+      <summary>Number Shadow Opacity</summary>
+      <description>Darkness of the shadow behind magnified digits. Set to 0% to remove the shadow.</description>
+    </key>
+    <key type="i" name="magnification-number-shadow-blur">
+      <default>6</default>
+      <range min="0" max="32"/>
+      <summary>Number Shadow Blur</summary>
+      <description>Softness of the number shadow, in pixels. Zero produces a sharp shadow.</description>
+    </key>
+    <key type="i" name="magnification-number-shadow-offset">
+      <default>2</default>
+      <range min="0" max="16"/>
+      <summary>Number Shadow Offset</summary>
+      <description>Vertical distance of the number shadow below the digit, in pixels.</description>
+    </key>
+    <key type="i" name="magnification-drag-delay">
+      <default>400</default>
+      <range min="100" max="1500"/>
+      <summary>Drag Hold Delay</summary>
+      <description>How long to hold a magnified item before dragging begins and the normal workspace bar returns, in milliseconds.</description>
+    </key>
+    <key type="i" name="magnification-cutoff">
+      <default>100</default><range min="0" max="100"/>
+      <summary>Cutoff</summary>
+      <description>End magnification at this percentage of the curve width on either side. Beyond the shaded boundary, sizes and gaps are exactly normal.</description>
+    </key>
+    <key type="i" name="magnification-cutoff-softness">
+      <default>0</default><range min="0" max="50"/>
+      <summary>Cutoff Transition</summary>
+      <description>Fade to normal inside the cutoff boundary. 0% makes an immediate piecewise cutoff; the shaded region always stays normal.</description>
+    </key>
+    <key type="b" name="magnification-adaptive-reach">
+      <default>false</default>
+      <summary>Adapt Width to Icon Count</summary>
+      <description>Enable explicit app-count-dependent compression. Fixed mode keeps c independent of app count.</description>
+    </key>
+    <key type="i" name="magnification-reach-reference">
+      <default>8</default><range min="1" max="32"/>
+      <summary>Reference Icon Count</summary>
+      <description>Shown app count at which the curve uses its configured width. The selected width mode determines which side of this count narrows the curve.</description>
+    </key>
+    <key type="i" name="magnification-example-count">
+      <default>9</default><range min="1" max="31"/>
+      <summary>Example Icon Count</summary>
+      <description>Number of apps in the graph. This previews dynamic compression; the live bar uses its actual shown app count.</description>
+    </key>
+    <key type="s" name="magnification-spacing-mode">
+      <default>'curve'</default><choices><choice value="uniform"/><choice value="curve"/><choice value="diminishing"/></choices>
+      <summary>Marker Spacing</summary>
+      <description>Uniform uses the custom app gap throughout the affected region. Bell Curve follows magnification. Diminishing reduces extra spacing toward the cutoff.</description>
+    </key>
+    <key type="i" name="magnification-spacing-falloff">
+      <default>100</default><range min="25" max="400"/>
+      <summary>Spacing Falloff</summary>
+      <description>How quickly diminishing extra spacing falls toward the normal gap. Higher values concentrate spacing near the cursor.</description>
+    </key>
+    <key type="s" name="magnification-reach-response"><default>'fewer'</default><choices><choice value="fewer"/><choice value="more"/></choices><summary>Width Response</summary><description>Fewer Icons narrows below the reference count. More Icons narrows above it, keeping a crowded bar compact.</description></key>
+    <key type="i" name="magnification-compression"><default>100</default><range min="5" max="1600"/><summary>Horizontal Compression c</summary><description>c in f(cx): 1 keeps the base width; larger values narrow the bell and smaller values widen it. The pixel coordinate system stays fixed.</description></key>
+    <key type="i" name="magnification-cutoff-distance"><default>96</default><range min="0" max="2048"/><summary>Cutoff Distance</summary><description>Distance on each side of the cursor in GNOME logical pixels. Beyond it, app scale and spacing are exactly normal. Independent of compression c.</description></key>
+    <key type="i" name="magnification-graph-span"><default>192</default><range min="32" max="4096"/><summary>Graph View</summary><description>Pixel distance shown on each side of the graph. This zooms only the editor; it never changes magnification.</description></key>
+    <key type="i" name="magnification-graph-zoom"><default>100</default><range min="5" max="200"/><summary>Graph Zoom</summary><description>100% shows real logical-pixel size. Both axes and icons always use the same zoom.</description></key>
+    <key type="i" name="empty-workspace-cooldown">
+      <default>5</default>
+      <range min="0" max="3600"/>
+      <summary>Empty Workspace Cooldown</summary>
+      <description>Seconds to preserve empty workspaces before occupied ones. Filling a workspace cancels its current grace period. If it becomes empty again, a new period starts. At expiry GNOME applies its normal dynamic-workspace cleanup. Zero disables preservation.</description>
+    </key>
+    <key type="b" name="magnification-cutoff-enabled"><default>true</default><summary>Enable Cutoff</summary><description>Return to normal size and spacing beyond the cutoff distance. Disable to use the full curve without clipping.</description></key>
+    <key type="as" name="magnification-visible-tools"><default>@as []</default><summary>Visible Graph Controls</summary><description>Independent graph nodes shown in the magnification editor. These choices do not change numeric settings panels or their expansion.</description></key>
+    <key type="s" name="magnification-active-preset"><default>'default'</default><summary>Magnification Preset</summary><description>Selected built-in or numbered custom curve and app-spacing preset.</description></key>
+    <key type="s" name="magnification-custom-presets"><default>'[]'</default><summary>Custom Magnification Presets</summary><description>Saved numbered custom curves and app-spacing configurations.</description></key>
+  </schema>
+</schemalist>

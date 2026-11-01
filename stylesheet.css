@@ -1,0 +1,154 @@
+
+.wsb-ws-btn-wrapper {
+    margin-right: 6px;
+    padding: 4px 0px 4px 0px;
+}
+
+.wsb-ws-btn-wrapper:last-child,
+.wsb-ws-btn-wrapper.wsb-last-child {
+    margin-right: 0px;
+}
+
+.wsb-ws-num-wrapper {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-radius: 8px 0px 0px 8px;
+    border-top-width: 2px;
+    border-right-width: 0px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.15);
+    padding: 0 7px 0px 7px;
+}
+
+.wsb-ws-num-wrapper-active {
+    border-color: #3584e4;
+}
+
+.wsb-ws-num-label-elem {
+    font-size: 15px;
+}
+
+.wsb-icons-wrapper {
+    background-color: rgba(255, 255, 255, 0.20);
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.15);
+    padding: 0 5px 0px 5px;
+    min-width: 10px;
+    border-radius: 0px 8px 8px 0px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 0px;
+}
+
+.wsb-icons-wrapper-active {
+    border-color: #3584e4;
+}
+
+.wsb-single-icon-wrapper {
+    margin-right: 5px;
+}
+
+.wsb-icons-wrapper .wsb-single-icon-wrapper:last-child {
+    margin-right: 0px;
+}
+
+.wsb-ws-btn-drag-hover .wsb-icons-wrapper {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.wsb-ws-btn-drag-hover .wsb-ws-num-wrapper {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.wsb-insertion-indicator {
+    background-color: #3584e4;
+    border-radius: 2px;
+    min-width: 3px;
+}
+
+.wsb-overflow-arrow {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    padding: 0 2px;
+}
+
+/* The rim wraps both pill segments; its transparent border reserves the 1px
+   so the legibility-shadows variants can color it without any reflow. */
+.wsb-pill-rim {
+    border: 1px solid transparent;
+    border-radius: 9px;
+}
+
+/* The chrome above assumes the stock panel: light text over a dark background.
+   The bar watches the foreground color it inherits from the panel and sets at
+   most one variant class below when that assumption breaks (light shell themes
+   and transparency extensions today, GNOME's transparent panel in the future). */
+
+.wsb-chrome-dark .wsb-ws-num-wrapper {
+    background-color: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.25);
+}
+
+.wsb-chrome-dark .wsb-icons-wrapper {
+    background-color: rgba(0, 0, 0, 0.12);
+    border-color: rgba(0, 0, 0, 0.25);
+}
+
+.wsb-chrome-dark .wsb-overflow-arrow {
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.wsb-chrome-dark .wsb-ws-btn-drag-hover .wsb-icons-wrapper {
+    background-color: rgba(0, 0, 0, 0.10) !important;
+    border-color: rgba(0, 0, 0, 0.50) !important;
+}
+
+.wsb-chrome-dark .wsb-ws-btn-drag-hover .wsb-ws-num-wrapper {
+    background-color: rgba(0, 0, 0, 0.06) !important;
+    border-color: rgba(0, 0, 0, 0.50) !important;
+}
+
+/* Legibility shadows (opt-in): crisp shadows behind numbers, arrows and
+   icons, plus a thin shaded rim colored on the .wsb-pill-rim wrapper, just
+   OUTSIDE each pill's own border, which stays untouched. No box-shadow
+   anywhere: on these small translucent pills St muddies the whole interior
+   with either flavor (outer is not clipped out of the box like in web CSS,
+   inset renders just as dirty).
+   Shadow polarity follows the panel foreground like everything else: dark
+   drop shadows under light text, a light halo under dark text. */
+.wsb-shadows-dark .wsb-ws-num-label-elem,
+.wsb-shadows-dark .wsb-overflow-arrow {
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.wsb-shadows-dark StIcon {
+    icon-shadow: 0 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.wsb-shadows-dark .wsb-pill-rim {
+    border-color: rgba(0, 0, 0, 0.45);
+}
+
+.wsb-shadows-light .wsb-ws-num-label-elem,
+.wsb-shadows-light .wsb-overflow-arrow {
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.wsb-shadows-light StIcon {
+    icon-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.wsb-shadows-light .wsb-pill-rim {
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+/* The two-class variant rules above outrank the one-class -active rules, so
+   the accent border of the active workspace has to be restored explicitly. */
+.wsb-chrome-dark .wsb-ws-num-wrapper-active,
+.wsb-chrome-dark .wsb-icons-wrapper-active {
+    border-color: #3584e4;
+}
